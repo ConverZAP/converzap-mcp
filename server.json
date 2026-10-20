@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.converzap/mcp",
+  "title": "ConverZAP — WhatsApp (official API)",
+  "description": "WhatsApp via the official Meta API: contacts, conversations, messages, CRM deals and campaigns.",
+  "version": "1.5.2",
+  "websiteUrl": "https://converzap.com",
+  "repository": {
+    "url": "https://github.com/ConverZAP/converzap-mcp",
+    "source": "github",
+    "id": "1426427308"
+  },
+  "icons": [
+    {
+      "src": "https://converzap.com/wp-content/uploads/2026/09/converzap-logo-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.converzap.com",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional if your client supports OAuth (it signs in automatically). Otherwise: Bearer czk_live_… (API key from Settings → Public API).",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
