@@ -11,25 +11,53 @@ The server exposes a ConverZAP workspace as [MCP](https://modelcontextprotocol.i
 
 ## Tools
 
-15 tools. Read tools are safe to call freely; write tools support a `dry_run` mode that validates without executing, and `send_message` / `start_campaign` are marked **destructive** so the assistant asks for confirmation first.
+41 tools in three groups. Read tools are safe to call freely. Write tools only appear with the write permissions granted on the connection, support a `dry_run` mode that runs every rule without executing, and the ones that reach a real person (messages, campaigns, turning an agent or automation on) are marked **external** so the assistant confirms first. Text written by contacts comes back marked as untrusted content.
+
+### Read
+
+| Tool | What it does |
+|---|---|
+| `whoami` | Account, your role, granted permissions, plan, connected WhatsApp numbers, pipelines and team |
+| `find_contacts` | Search contacts by name (accent-insensitive), phone (with or without the Brazilian 9th digit), e-mail or label |
+| `get_contact` | Full contact card with recent conversations and open deals |
+| `list_conversations` | List inbox conversations (open, awaiting a human, waiting for a reply…) |
+| `read_conversation` | Read a conversation's messages and state, incl. the 24-hour window |
+| `list_templates` | WhatsApp templates with their variables and the numbers (`channels`) each one works on |
+| `get_results` | Inbox report, campaign and automation results |
+| `get_approval` | Check an action waiting for a person to approve it in the app |
+
+### Act
 
 | Tool | Type | What it does |
 |---|---|---|
-| `whoami` | read | Account, your role, granted permissions, plan and connected WhatsApp numbers |
-| `find_contacts` | read | Search contacts by phone, name, e-mail or label |
-| `get_contact` | read | Full contact card with recent conversations and open deals |
-| `list_conversations` | read | List inbox conversations (open, awaiting a human, waiting for a reply…) |
-| `read_conversation` | read | Read a conversation's messages and state (incl. the 24-hour window) |
-| `list_templates` | read | List approved WhatsApp templates |
-| `get_results` | read | Inbox report and campaign results |
-| `send_message` | write · destructive | Send text or an approved template |
-| `schedule_message` | write | Schedule a message for later |
+| `send_message` | write · external | Send text or an approved template — in a conversation, or to a contact with no conversation yet |
+| `schedule_message` | write · external | Schedule a message for later |
 | `update_conversation` | write | Assign, resolve, reopen, snooze, label, add notes, hand over to/from the AI agent |
 | `upsert_contact` | write | Create or update a contact |
 | `manage_deal` | write | Create, update or move a CRM deal across stages |
-| `create_campaign_draft` | write | Create a campaign as a draft |
-| `start_campaign` | write · destructive | Start a campaign |
-| `enroll_in_automation` | write | Enroll a contact into an automation (or remove it) |
+| `create_campaign_draft` | write | Create a campaign as a draft (the dry run warns about template variables that are empty in the audience) |
+| `start_campaign` | write · external | Start, pause, resume or cancel a campaign (starting always waits for approval in the app) |
+| `enroll_in_automation` | write · external | Enroll a contact into an automation (or remove it) |
+| `draft_internal_agent` | write | Draft an internal agent for recurring team chores (the user reviews and publishes it in the app) |
+
+### Set up (AI agents, briefing, pipeline)
+
+Lets the assistant set the account up for the owner: research the business, write the briefing, build and test the WhatsApp AI agent, design the pipeline and create templates and automations. Changes to a live agent go to a draft until published.
+
+| Tool | What it does |
+|---|---|
+| `get_setup_status` | Setup status and the next step |
+| `research_business` · `get_briefing` · `update_briefing` | Research the business and read/update the briefing the agents use |
+| `get_rollout_plan` | Rollout plan from the briefing to the agents |
+| `create_agent` · `get_agent` · `update_agent` | Create, read and adjust an AI agent (draft) — incl. hand-back to the agent after the team |
+| `test_agent` | Test the agent in the simulator |
+| `publish_agent` · `discard_draft` · `activate_agent` | Publish or discard the draft, turn the agent on or off |
+| `set_agent_followup` · `set_agent_scheduling` | Follow-up when the customer goes quiet; scheduling and meeting reminders |
+| `get_agent_report` | AI agents' results |
+| `get_pipeline_context` · `apply_pipeline` · `set_operator` | Design and apply the pipeline; turn the pipeline operator on or off |
+| `create_template` | Create a WhatsApp template (sent to Meta for approval) |
+| `create_automation` · `set_automation_status` | Create an automation (draft) and turn it on or off |
+| `connect_whatsapp` · `get_app_link` · `get_plans` | Link to connect WhatsApp, link to an app page, plans and subscribe link |
 
 **Message rate limit:** 30 messages/minute and 300/day per connection (on top of your plan's own limits).
 
@@ -84,6 +112,7 @@ Clients with native remote-MCP support can instead add the URL `https://mcp.conv
 
 - "List my open WhatsApp conversations waiting for a human."
 - "Send the approved `lembrete` template to a contact."
+- "Set up a WhatsApp agent for my clinic and test it with three questions."
 - "Create a contact and move their deal to the Negotiation stage."
 - "How many messages were delivered this week?"
 
