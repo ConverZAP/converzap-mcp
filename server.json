@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.converzap/mcp",
   "title": "ConverZAP — WhatsApp (official API)",
-  "description": "WhatsApp via the official Meta API: contacts, conversations, messages, CRM deals and campaigns.",
+  "description": "WhatsApp CRM on the official Meta API: inbox, contacts, deals, campaigns, automations, AI agents.",
   "version": "1.7.0",
-  "websiteUrl": "https://converzap.com",
+  "websiteUrl": "https://converzap.com/solucoes/mcp-whatsapp/",
   "repository": {
     "url": "https://github.com/ConverZAP/converzap-mcp",
     "source": "github",
